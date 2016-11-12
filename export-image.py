@@ -53,8 +53,9 @@ def export_image(filename):
 
     with Image.open(filename) as image:
         width, height = image.size
-        width = width if width <= 128 else 128
-        height = (height / 8) * 8
+        original_height = height
+        extra = 1 if height % 8 > 0 else 0
+        height = (extra + (height / 8)) * 8
         pixels = image.load()
         height_chunks_count = height / 8
 
@@ -65,9 +66,11 @@ def export_image(filename):
 
                 for offset in range(8):
                     y = chunk_index * 8 + (7 - offset)
-                    word += draw_pixel(pixels[x, y])
+                    word += draw_pixel(pixels[x, y]) if y < original_height else '0'
 
                 dump.append(word)
+
+    print width, height
 
     open(source_name, "w").write(TEMPLATE_H.format(
         define=define_name,
