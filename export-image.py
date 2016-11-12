@@ -70,8 +70,6 @@ def export_image(filename):
 
                 dump.append(word)
 
-    print width, height
-
     open(source_name, "w").write(TEMPLATE_H.format(
         define=define_name,
         image=image_name,
